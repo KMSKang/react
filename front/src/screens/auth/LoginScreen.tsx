@@ -4,7 +4,7 @@ import {Text, StyleSheet, View} from 'react-native';
 function LoginScreen() {
     return (
         <View>
-            <Text>로그인 스크린</Text>
+            <Text>로그인</Text>
         </View>
     );
 }
