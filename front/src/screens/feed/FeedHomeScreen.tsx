@@ -1,12 +1,12 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 function FeedHomeScreen() {
-  return (
-    <View>
-      <Text>피드홈</Text>
-    </View>
-  );
+    return (
+        <View>
+            <Text>피드홈</Text>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({});
