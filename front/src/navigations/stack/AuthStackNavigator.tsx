@@ -16,19 +16,18 @@ const Stack = createStackNavigator<AuthStackParamList>();
 
 function AuthStackNavigator() {
     return (
-        // <Stack.Navigator>
         <Stack.Navigator screenOptions = {{
                          cardStyle: {
                              backgroundColor: 'white'
                          },
                          headerStyle: {
                              backgroundColor: 'white',
-                             shadowColor: 'red'
+                             shadowColor: 'gray'
                          },
                          headerTitleStyle: {
-                             fontSize: 30
+                             fontSize: 15
                          },
-                         headerTintColor: 'red'
+                         headerTintColor: 'black'
         }}>
             <Stack.Screen name={authNavigations.AUTH_HOME}
                           component={AuthHomeScreen} 
