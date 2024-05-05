@@ -4,8 +4,10 @@ import useForm from '../../hooks/useForm';
 import InputField from '../../components/InputField';
 import CustomButton from '../../components/CustomButton';
 import { validateSignup } from '../../utils';
+import useAuth from '../../hooks/queries/useAuth';
 
 function SignScreen() {
+    const {signupMutation, loginMutation} = useAuth();
     const passwordRef = useRef<TextInput | null>(null);
     const passwordConfirmRef = useRef<TextInput | null>(null);
 
@@ -15,7 +17,14 @@ function SignScreen() {
     });
 
     const handleSubmit = () => {
-        console.log(signup.values);
+        const { email, password } = signup.values;
+
+        signupMutation.mutate(
+            { email, password },
+            {
+                onSuccess: () => loginMutation.mutate({ email, password }),
+            },
+        );
     };
 
     return (
@@ -48,7 +57,6 @@ function SignScreen() {
                             onSubmitEditing={handleSubmit}
                             {...signup.getTextInputProps('passwordConfirm')} />
             </View>
-            {/* <CustomButton label="회원가입" /> */}
             <CustomButton label="회원가입" onPress={handleSubmit} />
         </SafeAreaView>
     );
