@@ -1,10 +1,15 @@
 import { useEffect } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getAccessToken, getProfile, logout, postLogin, postSignup } from '../../api/auth';
-import { UseMutationCustomOptions, UseQueryCustomOptions, } from '../../types/common';
-import { removeEncryptStorage, setEncryptStorage, removeHeader, setHeader, } from '../../utils';
-import queryClient from '../../api/queryClient';
-import { numbers, queryKeys, storageKeys } from '../../constants';
+// import { getAccessToken, getProfile, logout, postLogin, postSignup } from '../../api/auth';
+// import { UseMutationCustomOptions, UseQueryCustomOptions, } from '../../types/common';
+// import { removeEncryptStorage, setEncryptStorage, removeHeader, setHeader, } from '../../utils';
+// import queryClient from '../../api/queryClient';
+// import { numbers, queryKeys, storageKeys } from '../../constants';
+import { getAccessToken, getProfile, logout, postLogin, postSignup } from '@/api/auth';
+import { UseMutationCustomOptions, UseQueryCustomOptions, } from '@/types/common';
+import { removeEncryptStorage, setEncryptStorage, removeHeader, setHeader, } from '@/utils';
+import queryClient from '@/api/queryClient';
+import { numbers, queryKeys, storageKeys } from '@/constants';
 
 function useSignup(mutaionOptions?: UseMutationCustomOptions) {
     return useMutation({
