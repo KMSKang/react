@@ -3,7 +3,6 @@ const mainNavigations = {
     FEED: 'Feed',
     CALENDAR: 'Calendar',
 } as const;
-  
 
 const authNavigations = {
     AUTH_HOME: 'AuthHome',
@@ -13,7 +12,7 @@ const authNavigations = {
 
 const mapNavigations = {
     MAP_HOME: 'MapHome',
+    ADD_POST: 'AddPost',
 } as const;
 
-// export {authNavigations};
-export {mainNavigations, authNavigations, mapNavigations};
+export { mainNavigations, authNavigations, mapNavigations };
