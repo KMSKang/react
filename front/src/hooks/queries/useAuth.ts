@@ -1,11 +1,6 @@
 import { useEffect } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-// import { getAccessToken, getProfile, logout, postLogin, postSignup } from '../../api/auth';
-// import { UseMutationCustomOptions, UseQueryCustomOptions, } from '../../types/common';
-// import { removeEncryptStorage, setEncryptStorage, removeHeader, setHeader, } from '../../utils';
-// import queryClient from '../../api/queryClient';
-// import { numbers, queryKeys, storageKeys } from '../../constants';
-import { getAccessToken, getProfile, logout, postLogin, postSignup } from '@/api/auth';
+import { ResponseProfile, getAccessToken, getProfile, logout, postLogin, postSignup } from '@/api/auth';
 import { UseMutationCustomOptions, UseQueryCustomOptions, } from '@/types/common';
 import { removeEncryptStorage, setEncryptStorage, removeHeader, setHeader, } from '@/utils';
 import queryClient from '@/api/queryClient';
@@ -64,10 +59,11 @@ function useGetRefreshToken() {
     return { isSuccess, isError };
 }
 
-function useGetProfile(queryOptions?: UseQueryCustomOptions) {
+// function useGetProfile(queryOptions?: UseQueryCustomOptions) {
+function useGetProfile(queryOptions?: UseQueryCustomOptions<ResponseProfile>) {
     return useQuery({
-        queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
         queryFn: getProfile,
+        queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
         ...queryOptions,
     });
 }
