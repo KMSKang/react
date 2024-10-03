@@ -1,32 +1,21 @@
-import React, { useRef, forwardRef, ForwardedRef } from 'react';
-import {
-    Dimensions,
-    StyleSheet,
-    TextInput,
-    View,
-    TextInputProps,
-    Text,
-    Pressable,
-} from 'react-native';
-// import { colors } from '../constants';
-// import { mergeRefs } from '../utils/common';
-import { colors } from '@/constants';
+import React, { forwardRef, ReactNode, ForwardedRef, useRef } from 'react';
+import { Dimensions, StyleSheet, TextInput, View, TextInputProps, Text, Pressable } from 'react-native';
 import { mergeRefs } from '@/utils/common';
+import { colors } from '@/constants';
 
 interface InputFieldProps extends TextInputProps {
     disabled?: boolean;
     error?: string;
     touched?: boolean;
+    icon?: ReactNode;
 }
 
 const deviceHeight = Dimensions.get('screen').height;
 
-// function InputField({
 const InputField = forwardRef(
     (
-        {disabled = false, error, touched, ...props
-        // }: InputFieldProps) {
-        }: InputFieldProps,
+        // { disabled = false, error, touched, ...props }: InputFieldProps,
+        { disabled = false, error, touched, icon = null, ...props }: InputFieldProps,
         ref?: ForwardedRef<TextInput>,
     ) => {
         const innerRef = useRef<TextInput | null>(null);
@@ -37,20 +26,29 @@ const InputField = forwardRef(
 
         return (
             <Pressable onPress={handlePressInput}>
-                <View style={[styles.container
-                            , disabled && styles.disabled
-                            , touched && Boolean(error) && styles.inputError]}>
-                    <TextInput 
-                            // ref={innerRef}
-                            ref={ref? mergeRefs(innerRef, ref) : innerRef}
+                <View
+                    style={[
+                        styles.container,
+                        disabled && styles.disabled,
+                        props.multiline && styles.multiLine,
+                        touched && Boolean(error) && styles.inputError
+                    ]}>
+                    <View style={Boolean(icon) && styles.innerContainer}>
+                        {icon}
+                        <TextInput
+                            ref={ref ? mergeRefs(innerRef, ref) : innerRef}
                             editable={!disabled}
                             placeholderTextColor={colors.GRAY_500}
                             style={[styles.input, disabled && styles.disabled]}
                             autoCapitalize="none"
                             spellCheck={false}
                             autoCorrect={false}
-                            {...props}/>
-                    {touched && Boolean(error) && <Text style={styles.error}>{error}</Text>}
+                            {...props}
+                        />
+                    </View>
+                    {touched && Boolean(error) && (
+                        <Text style={styles.error}>{error}</Text>
+                    )}
                 </View>
             </Pressable>
         );
@@ -63,10 +61,18 @@ const styles = StyleSheet.create({
         borderColor: colors.GRAY_200,
         padding: deviceHeight > 700 ? 15 : 10,
     },
+    multiLine: {
+        paddingBottom: deviceHeight > 700 ? 45 : 30,
+    },
     input: {
         fontSize: 16,
         color: colors.BLACK,
         padding: 0,
+    },
+    innerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 5,
     },
     disabled: {
         backgroundColor: colors.GRAY_200,
