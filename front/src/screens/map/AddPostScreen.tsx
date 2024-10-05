@@ -23,6 +23,10 @@ import MarkerSelector from '@/components/MarkerSelector';
 import ScoreInput from '@/components/ScoreInput';
 import DatePickerOption from '@/components/DatePickerOption';
 import useModal from '@/hooks/useModal';
+import ImageInput from '@/components/ImageInput';
+import usePermission from '@/hooks/usePermission';
+import useImagePicker from '@/hooks/useImagePicker';
+import PreviewImageList from '@/components/PreviewImageList';
 
 type AddPostScreenProps = StackScreenProps<
     MapStackParamList,
@@ -43,6 +47,10 @@ function AddPostScreen({ route, navigation }: AddPostScreenProps) {
     const [isPicked, setIsPicked] = useState(false);
     const [markerColor, setMarkerColor] = useState<MarkerColor>('RED');
     const [score, setScore] = useState(5);
+    const imagePicker = useImagePicker({
+        initialImages: [],
+    });
+    usePermission('PHOTO');
 
     const handleChangeDate = (pickedDate: Date) => {
         setDate(pickedDate);
@@ -63,7 +71,6 @@ function AddPostScreen({ route, navigation }: AddPostScreenProps) {
 
     const handleSubmit = () => {
         const body = {
-            // date: new Date(),
             date,
             title: addPost.values.title,
             description: addPost.values.description,
@@ -84,7 +91,6 @@ function AddPostScreen({ route, navigation }: AddPostScreenProps) {
         navigation.setOptions({
             headerRight: () => AddPostHeaderRight(handleSubmit),
         });
-    // });
     }, [handleSubmit, navigation]);
 
     return (
@@ -98,7 +104,6 @@ function AddPostScreen({ route, navigation }: AddPostScreenProps) {
                             <Octicons name="location" size={16} color={colors.GRAY_500} />
                         }
                     />
-                    {/* <CustomButton variant="outlined" size="large" label={'날짜 선택'} /> */}
                     <CustomButton
                         variant="outlined"
                         size="large"
@@ -131,6 +136,10 @@ function AddPostScreen({ route, navigation }: AddPostScreenProps) {
                         onPressMarker={handleSelectMarker}
                     />
                     <ScoreInput score={score} onChangeScore={handleChangeScore} />
+                    <View style={styles.imagesViewer}>
+                        <ImageInput onChange={imagePicker.handleChange} />
+                        <PreviewImageList imageUris={imagePicker.imageUris} />
+                    </View>
                     <DatePickerOption
                         date={date}
                         isVisible={datePickerModal.isVisible}
@@ -155,6 +164,9 @@ const styles = StyleSheet.create({
     inputContainer: {
         gap: 20,
         marginBottom: 20,
+    },
+    imagesViewer: {
+        flexDirection: 'row',
     },
 });
 
