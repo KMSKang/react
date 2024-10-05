@@ -1,14 +1,22 @@
-import React, { useEffect, useRef } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View, TextInput } from 'react-native';
-import { StackScreenProps } from '@react-navigation/stack';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
+import {StackScreenProps} from '@react-navigation/stack';
 import Octicons from 'react-native-vector-icons/Octicons';
 
-import { MapStackParamList } from '@/navigations/stack/MapStackNavigator';
-import { colors, mapNavigations } from '@/constants';
+import {MapStackParamList} from '@/navigations/stack/MapStackNavigator';
+import {colors, mapNavigations} from '@/constants';
 import InputField from '@/components/InputField';
 import CustomButton from '@/components/CustomButton';
 import useForm from '@/hooks/useForm';
-import { validateAddPost } from '@/utils';
+import {validateAddPost} from '@/utils';
+import useMutateCreatePost from '@/hooks/queries/useMutateCreatePost';
+import {MarkerColor} from '@/types';
 import AddPostHeaderRight from '@/components/AddPostHeaderRight';
 
 type AddPostScreenProps = StackScreenProps<
@@ -16,17 +24,34 @@ type AddPostScreenProps = StackScreenProps<
     typeof mapNavigations.ADD_POST
 >;
 
-// function AddPostScreen({ route }: AddPostScreenProps) {
 function AddPostScreen({ route, navigation }: AddPostScreenProps) {
     const { location } = route.params;
     const descriptionRef = useRef<TextInput | null>(null);
+    const createPost = useMutateCreatePost();
     const addPost = useForm({
         initialValue: { title: '', description: '' },
         validate: validateAddPost,
     });
+    const [markerColor, setMarkerColor] = useState<MarkerColor>('RED');
+    const [score, setScore] = useState(5);
+    const [address, setAddress] = useState('');
 
     const handleSubmit = () => {
-        //
+        const body = {
+            date: new Date(),
+            title: addPost.values.title,
+            description: addPost.values.description,
+            color: markerColor,
+            score,
+            imageUris: [],
+        };
+
+        createPost.mutate(
+            { address, ...location, ...body },
+            {
+                onSuccess: () => navigation.goBack(),
+            },
+        );
     };
 
     useEffect(() => {
