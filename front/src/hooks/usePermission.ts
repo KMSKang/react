@@ -27,9 +27,7 @@ function usePermission(type: PermissionType) {
             // const permissionOS = isAndroid ? PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION : PERMISSIONS.IOS.LOCATION_WHEN_IN_USE;
             const permissionOS = isAndroid ? androidPermissons : iosPermissons;
             
-            // const checked = await check(permissionOS);
             const checked = await check(permissionOS[type]);
-            console.log('checked', checked);
 
             const showPermissonAlert = () => {
                 Alert.alert(
