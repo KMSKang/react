@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-import { alerts, colors, mapNavigations } from '@/constants';
+import { alerts, colors, mapNavigations, numbers } from '@/constants';
 import { CompositeNavigationProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MapStackParamList } from '@/navigations/stack/MapStackNavigator';
@@ -18,6 +18,7 @@ import CustomMarker from '@/components/common/CustomMarker';
 import useGetMarkers from '@/hooks/queries/useGetMarkers';
 import useModal from '@/hooks/useModal';
 import MarkerModal from '@/components/map/MarkerModal';
+import useMoveMapView from '@/hooks/useMoveMapView';
 
 type Navigation = CompositeNavigationProp<
     StackNavigationProp<MapStackParamList>,
@@ -27,22 +28,23 @@ type Navigation = CompositeNavigationProp<
 function MapHomeScreen() {
     const inset = useSafeAreaInsets();
     const navigation = useNavigation<Navigation>();
-    const mapRef = useRef<MapView | null>(null);
     const { userLocation, isUserLocationError } = useUserLocation();
     const [selectLocation, setSelectLocation] = useState<LatLng | null>();
     const [markerId, setMarkerId] = useState<number | null>(null);
     const markerModal = useModal();
     const { data: markers = [] } = useGetMarkers();
+    // const mapRef = useRef<MapView | null>(null);
+    const {mapRef, moveMapView, handleChangeDelta} = useMoveMapView();
 
     usePermission('LOCATION');
 
-    const moveMapView = (coordinate: LatLng) => {
-        mapRef.current?.animateToRegion({
-            ...coordinate,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-        });
-    };
+    // const moveMapView = (coordinate: LatLng) => {
+    //     mapRef.current?.animateToRegion({
+    //         ...coordinate,
+    //         latitudeDelta: 0.0922,
+    //         longitudeDelta: 0.0421,
+    //     });
+    // };
 
     const handlePressMarker = (id: number, coordinate: LatLng) => {
         setMarkerId(id);
@@ -74,12 +76,13 @@ function MapHomeScreen() {
             return;
         }
 
-        mapRef.current?.animateToRegion({
-            latitude: userLocation.latitude,
-            longitude: userLocation.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-        });
+        // mapRef.current?.animateToRegion({
+        //     latitude: userLocation.latitude,
+        //     longitude: userLocation.longitude,
+        //     latitudeDelta: 0.0922,
+        //     longitudeDelta: 0.0421,
+        // });
+        moveMapView(userLocation);
     };
 
     return (
@@ -93,10 +96,12 @@ function MapHomeScreen() {
                 showsMyLocationButton={false}
                 customMapStyle={mapStyle}
                 onLongPress={handleLongPressMapView}
+                onRegionChangeComplete={handleChangeDelta}
                 region={{
                     ...userLocation,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
+                    // latitudeDelta: 0.0922,
+                    // longitudeDelta: 0.0421,
+                    ...numbers.INITIAL_DELTA
                 }}>
                 {markers.map(({ id, color, score, ...coordinate }) => (
                     <CustomMarker
