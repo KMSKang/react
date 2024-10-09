@@ -58,6 +58,17 @@ const updateFavoritePost = async (id: number): Promise<number> => {
     return data;
 };
 
-// export { createPost, getPost, getPosts, deletePost, updatePost };
-export { createPost, getPost, getPosts, deletePost, updatePost, getFavoritePosts, updateFavoritePost };
+const getSearchPosts = async (
+    page = 1,
+    query: string,
+): Promise<ResponsePost[]> => {
+    const { data } = await axiosInstance.get(
+        `/posts/my/search?query=${query}&page=${page}`,
+    );
+
+    return data;
+};
+
+// export { createPost, getPost, getPosts, deletePost, updatePost, getFavoritePosts, updateFavoritePost };
+export { createPost, getPost, getPosts, deletePost, updatePost, getFavoritePosts, updateFavoritePost, getSearchPosts };
 export type { ResponsePost, RequestCreatePost, ResponseSinglePost, RequestUpdatePost };

@@ -14,7 +14,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import useGetPost from '@/hooks/queries/useGetPost';
-import { colors, feedNavigations, mainNavigations } from '@/constants';
+import { colors, feedNavigations, feedTabNavigations, mainNavigations } from '@/constants';
 import { getDateWithSeparator } from '@/utils';
 import CustomMarker from '../common/CustomMarker';
 import { CompositeNavigationProp, useNavigation } from '@react-navigation/native';
@@ -43,18 +43,27 @@ function MarkerModal({ markerId, isVisible, hide }: MarkerModalProps) {
 
     const handlePressModal = () => {
         navigation.navigate(mainNavigations.FEED, {
-            screen: feedNavigations.FEED_DETAIL,
+            // screen: feedNavigations.FEED_DETAIL,
+            // params: {
+            //     id: post.id,
+            // },
+            // initial: false,
+            screen: feedTabNavigations.FEED_HOME,
             params: {
-                id: post.id,
+                screen: feedNavigations.FEED_DETAIL,
+                params: {
+                    id: post.id,
+                },
+                initial: false,
             },
-            initial: false,
         });
+
+        hide();
     };
 
     return (
         <Modal visible={isVisible} transparent={true} animationType={'slide'}>
             <SafeAreaView style={[styles.optionBackground]} onTouchEnd={hide}>
-                {/* <Pressable style={styles.cardContainer} onPress={() => { }}> */}
                 <Pressable style={styles.cardContainer} onPress={handlePressModal}>
                     <View style={styles.cardInner}>
                         <View style={styles.cardAlign}>
