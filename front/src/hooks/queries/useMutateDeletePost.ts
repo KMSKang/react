@@ -1,7 +1,7 @@
 import { deletePost } from '@/api';
 import queryClient from '@/api/queryClient';
 import { queryKeys } from '@/constants';
-import { Marker, UseMutationCustomOptions } from '@/types';
+import { UseMutationCustomOptions } from '@/types';
 import { useMutation } from '@tanstack/react-query';
 
 function useMutateDeletePost(mutationOptions?: UseMutationCustomOptions) {
@@ -14,12 +14,9 @@ function useMutateDeletePost(mutationOptions?: UseMutationCustomOptions) {
             queryClient.invalidateQueries({
                 queryKey: [queryKeys.MARKER, queryKeys.GET_MARKERS],
             });
-            //   queryClient.setQueryData<Marker[]>(
-            //     [queryKeys.MARKER, queryKeys.GET_MARKERS],
-            //     existingMarkers => {
-            //       return existingMarkers?.filter(marker => marker.id !== deleteId);
-            //     },
-            //   );
+            queryClient.invalidateQueries({
+                queryKey: [queryKeys.POST, queryKeys.GET_CALENDAR_POSTS],
+            });
         },
         ...mutationOptions,
     });
