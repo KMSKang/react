@@ -8,10 +8,10 @@ import MapStackNavigator, { MapStackParamList } from '../stack/MapStackNavigator
 import { colors, mainNavigations } from '@/constants';
 import CustomDrawerContent from './CustomDrawerContent';
 import FeedTabNavigator, { FeedTabParamList } from '../tab/FeedTabNavigator';
+import FeedHomeHeaderLeft from '@/components/feed/FeedHomeHeaderLeft';
 
 export type MainDrawerParamList = {
     [mainNavigations.HOME]: NavigatorScreenParams<MapStackParamList>;
-    // [mainNavigations.FEED]: NavigatorScreenParams<FeedStackParamList>;
     [mainNavigations.FEED]: NavigatorScreenParams<FeedTabParamList>;
     [mainNavigations.CALENDAR]: undefined;
 };
@@ -49,7 +49,7 @@ function MainDrawerNavigator() {
     return (
         <Drawer.Navigator
             drawerContent={CustomDrawerContent}
-            screenOptions={({route}) => ({
+            screenOptions={({ route }) => ({
                 headerShown: false,
                 drawerType: 'front',
                 drawerStyle: {
@@ -63,7 +63,7 @@ function MainDrawerNavigator() {
                 drawerLabelStyle: {
                     fontWeight: '600',
                 },
-                drawerIcon: ({focused}) => DrawerIcons(route, focused),
+                drawerIcon: ({ focused }) => DrawerIcons(route, focused),
             })}>
             <Drawer.Screen
                 name={mainNavigations.HOME}
@@ -75,7 +75,6 @@ function MainDrawerNavigator() {
             />
             <Drawer.Screen
                 name={mainNavigations.FEED}
-                // component={FeedStackNavigator}
                 component={FeedTabNavigator}
                 options={{
                     title: '피드',
@@ -84,9 +83,14 @@ function MainDrawerNavigator() {
             <Drawer.Screen
                 name={mainNavigations.CALENDAR}
                 component={CalendarHomeScreen}
-                options={{
+                // options={{
+                //     title: '캘린더'
+                // }}
+                options={({ navigation }) => ({
                     title: '캘린더',
-                }}
+                    headerShown: true,
+                    headerLeft: () => FeedHomeHeaderLeft(navigation),
+                })}
             />
         </Drawer.Navigator>
     );
