@@ -68,6 +68,5 @@ function isSameAsCurrentDate(year: number, month: number, date: number) {
     return currentDate === inputDate;
 }
 
-// export { getDateWithSeparator, getDateLocaleFormat };
 export { getDateWithSeparator, getDateLocaleFormat, getMonthYearDetails, getNewMonthYear, isSameAsCurrentDate };
 export type { MonthYear };

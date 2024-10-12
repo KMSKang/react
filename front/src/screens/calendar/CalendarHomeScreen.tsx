@@ -17,11 +17,6 @@ function CalendarHomeScreen() {
         setMonthYear(prev => getNewMonthYear(prev, increment));
     };
 
-    // return (
-    //     <View>
-    //         <Text>캘린더</Text>
-    //     </View>
-    // );
     return (
         <SafeAreaView style={styles.container}>
             <Calendar
