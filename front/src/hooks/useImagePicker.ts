@@ -5,6 +5,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import useMutateImages from './queries/useMutateImages';
 import type { ImageUri } from '@/types';
 import { getFormDataImages } from '@/utils';
+import Toast from 'react-native-toast-message';
 
 interface UseImagePickerProps {
     initialImages: ImageUri[];
@@ -43,19 +44,22 @@ function useImagePicker({ initialImages = [] }: UseImagePickerProps) {
             maxFiles: 5,
             cropperChooseText: '완료',
             cropperCancelText: '취소',
-        })
-            .then(images => {
-                const formData = getFormDataImages('images', images);
+        }).then(images => {
+            const formData = getFormDataImages('images', images);
 
-                uploadImages.mutate(formData, {
-                    onSuccess: data => addImageUris(data),
-                });
-            })
-            .catch(error => {
-                if (error.code !== 'E_PICKER_CANCELLED') {
-                    // 에러메세지표시
-                }
+            uploadImages.mutate(formData, {
+                onSuccess: data => addImageUris(data),
             });
+        }).catch(error => {
+            if (error.code !== 'E_PICKER_CANCELLED') {
+                Toast.show({
+                    type: 'error',
+                    text1: '갤러리를 열 수 없어요.',
+                    text2: '권한을 허용했는지 확인해주세요.',
+                    position: 'bottom',
+                });
+            }
+        });
     };
 
     return {

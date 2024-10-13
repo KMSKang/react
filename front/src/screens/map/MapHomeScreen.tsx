@@ -19,6 +19,7 @@ import useGetMarkers from '@/hooks/queries/useGetMarkers';
 import useModal from '@/hooks/useModal';
 import MarkerModal from '@/components/map/MarkerModal';
 import useMoveMapView from '@/hooks/useMoveMapView';
+import Toast from 'react-native-toast-message';
 
 type Navigation = CompositeNavigationProp<
     StackNavigationProp<MapStackParamList>,
@@ -33,18 +34,9 @@ function MapHomeScreen() {
     const [markerId, setMarkerId] = useState<number | null>(null);
     const markerModal = useModal();
     const { data: markers = [] } = useGetMarkers();
-    // const mapRef = useRef<MapView | null>(null);
-    const {mapRef, moveMapView, handleChangeDelta} = useMoveMapView();
+    const { mapRef, moveMapView, handleChangeDelta } = useMoveMapView();
 
     usePermission('LOCATION');
-
-    // const moveMapView = (coordinate: LatLng) => {
-    //     mapRef.current?.animateToRegion({
-    //         ...coordinate,
-    //         latitudeDelta: 0.0922,
-    //         longitudeDelta: 0.0421,
-    //     });
-    // };
 
     const handlePressMarker = (id: number, coordinate: LatLng) => {
         setMarkerId(id);
@@ -72,16 +64,14 @@ function MapHomeScreen() {
 
     const handlePressUserLocation = () => {
         if (isUserLocationError) {
-            // 에러메세지를 표시하기
+            Toast.show({
+                type: 'error',
+                text1: '위치 권한을 허용해주세요.',
+                position: 'bottom',
+            });
             return;
         }
 
-        // mapRef.current?.animateToRegion({
-        //     latitude: userLocation.latitude,
-        //     longitude: userLocation.longitude,
-        //     latitudeDelta: 0.0922,
-        //     longitudeDelta: 0.0421,
-        // });
         moveMapView(userLocation);
     };
 
@@ -99,8 +89,6 @@ function MapHomeScreen() {
                 onRegionChangeComplete={handleChangeDelta}
                 region={{
                     ...userLocation,
-                    // latitudeDelta: 0.0922,
-                    // longitudeDelta: 0.0421,
                     ...numbers.INITIAL_DELTA
                 }}>
                 {markers.map(({ id, color, score, ...coordinate }) => (
