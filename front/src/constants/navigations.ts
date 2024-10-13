@@ -12,7 +12,8 @@ const authNavigations = {
 
 const mapNavigations = {
     MAP_HOME: 'MapHome',
-    ADD_POST: 'AddPost'
+    ADD_POST: 'AddPost',
+    SEARCH_LOCATION: 'SearchLocation',
 } as const;
 
 const feedNavigations = {
@@ -28,5 +29,4 @@ const feedTabNavigations = {
     FEED_SEARCH: 'FeedSearch',
 } as const;
 
-// export { mainNavigations, authNavigations, mapNavigations, feedNavigations };
 export { mainNavigations, authNavigations, mapNavigations, feedNavigations, feedTabNavigations };
