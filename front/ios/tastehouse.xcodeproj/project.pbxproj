@@ -49,6 +49,7 @@
 		CB12C7332CAE187900A32FE8 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ionicons.ttf; sourceTree = "<group>"; };
 		CB12C7342CAE187900A32FE8 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		CB12C7352CAE187900A32FE8 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
+		CB15896D2CBBE96400CB6C1B /* tastehouse.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = tastehouse.entitlements; path = tastehouse/tastehouse.entitlements; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -92,6 +93,7 @@
 		13B07FAE1A68108700A75B9A /* tastehouse */ = {
 			isa = PBXGroup;
 			children = (
+				CB15896D2CBBE96400CB6C1B /* tastehouse.entitlements */,
 				CB12C7322CAE177700A32FE8 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -505,7 +507,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = tastehouse/tastehouse.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2532M593JL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = tastehouse/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -533,7 +537,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = tastehouse/tastehouse.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2532M593JL;
 				INFOPLIST_FILE = tastehouse/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (

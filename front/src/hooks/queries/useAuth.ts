@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { MutationFunction, useMutation, useQuery } from '@tanstack/react-query';
-import { ResponseProfile, ResponseToken, getAccessToken, getProfile, kakaoLogin, logout, postLogin, postSignup } from '@/api/auth';
+import { ResponseProfile, ResponseToken, appleLogin, getAccessToken, getProfile, kakaoLogin, logout, postLogin, postSignup } from '@/api/auth';
 import { UseMutationCustomOptions, UseQueryCustomOptions, } from '@/types/common';
 import { removeEncryptStorage, setEncryptStorage, removeHeader, setHeader, } from '@/utils';
 import queryClient from '@/api/queryClient';
@@ -13,13 +13,11 @@ function useSignup(mutaionOptions?: UseMutationCustomOptions) {
     });
 }
 
-// function useLogin(mutationOptions?: UseMutationCustomOptions) {
 function useLogin<T>(
     loginAPI: MutationFunction<ResponseToken, T>,
     mutationOptions?: UseMutationCustomOptions
 ) {
     return useMutation({
-        // mutationFn: postLogin,
         mutationFn: loginAPI,
         onSuccess: ({ accessToken, refreshToken }) => {
             setEncryptStorage(storageKeys.REFRESH_TOKEN, refreshToken);
@@ -43,6 +41,10 @@ function useEmailLogin(mutationOptions?: UseMutationCustomOptions) {
 
 function useKakaoLogin(mutationOptions?: UseMutationCustomOptions) {
     return useLogin(kakaoLogin, mutationOptions);
+}
+
+function useAppleLogin(mutationOptions?: UseMutationCustomOptions) {
+    return useLogin(appleLogin, mutationOptions);
 }
 
 function useGetRefreshToken() {
@@ -101,9 +103,9 @@ function useAuth() {
         enabled: refreshTokenQuery.isSuccess,
     });
     const isLogin = getProfileQuery.isSuccess;
-    // const loginMutation = useLogin();
     const loginMutation = useEmailLogin();
     const kakaoLoginMutation = useKakaoLogin();
+    const appleLoginMutation = useAppleLogin();
     const logoutMutation = useLogout();
 
     return {
@@ -112,7 +114,8 @@ function useAuth() {
         isLogin,
         getProfileQuery,
         logoutMutation,
-        kakaoLoginMutation
+        kakaoLoginMutation,
+        appleLoginMutation,
     };
 }
 
