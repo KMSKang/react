@@ -1,29 +1,49 @@
 import React from 'react';
-import { SafeAreaView, Button, StyleSheet, View, Image, Dimensions } from 'react-native';
+import { SafeAreaView, Button, StyleSheet, View, Image, Dimensions, Pressable, Text } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-// import { AuthStackParamList } from '../../navigations/stack/AuthStackNavigator';
-// import { authNavigations } from '../../constants';
-// import CustomButton from '../../components/CustomButton';
 import { AuthStackParamList } from '@/navigations/stack/AuthStackNavigator';
-import { authNavigations } from '@/constants';
+import { authNavigations, colors } from '@/constants';
 import CustomButton from '@/components/common/CustomButton';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-type AuthHomeScreenProps = StackScreenProps<AuthStackParamList, typeof authNavigations.AUTH_HOME>;
+type AuthHomeScreenProps = StackScreenProps<
+    AuthStackParamList,
+    typeof authNavigations.AUTH_HOME
+>;
 
 function AuthHomeScreen({ navigation }: AuthHomeScreenProps) {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.imageContainer}>
-                <Image resizeMode="contain"
-                       style={styles.image}
-                       source={require('../../assets/matzip.png')} />
+                <Image
+                    resizeMode="contain"
+                    style={styles.image}
+                    source={require('../../assets/matzip.png')} />
             </View>
             <View style={styles.buttonContainer}>
-                <CustomButton label="로그인하기"
-                              onPress={() => navigation.navigate(authNavigations.LOGIN)} />
-                <CustomButton label="회원가입하기"
-                              variant="outlined"
-                              onPress={() => navigation.navigate(authNavigations.SIGNUP)} />
+                <CustomButton
+                    label="카카오 로그인하기"
+                    variant="filled"
+                    size="large"
+                    onPress={() => navigation.navigate(authNavigations.KAKAO)}
+                    style={styles.kakaoButtonContainer}
+                    textStyle={styles.kakaoButtonText}
+                    icon={
+                        <Ionicons name={'chatbubble-sharp'} color={'#181600'} size={16} />
+                    }
+                />
+                <CustomButton
+                    // label="로그인하기"
+                    label="이메일 로그인하기"
+                    onPress={() => navigation.navigate(authNavigations.LOGIN)}
+                />
+                {/* <CustomButton
+                    label="회원가입하기"
+                    variant="outlined"
+                    onPress={() => navigation.navigate(authNavigations.SIGNUP)} /> */}
+                <Pressable onPress={() => navigation.navigate(authNavigations.SIGNUP)}>
+                    <Text style={styles.emailText}>이메일로 가입하기</Text>
+                </Pressable>
             </View>
         </SafeAreaView>
     );
@@ -48,6 +68,18 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         gap: 10,
+    },
+    kakaoButtonContainer: {
+        backgroundColor: '#fee503',
+    },
+    kakaoButtonText: {
+        color: '#181600',
+    },
+    emailText: {
+        textDecorationLine: 'underline',
+        fontWeight: '500',
+        padding: 10,
+        color: colors.BLACK,
     },
 });
 
