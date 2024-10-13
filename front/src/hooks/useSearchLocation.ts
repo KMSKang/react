@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import type { LatLng } from 'react-native-maps';
 import Config from 'react-native-config';
+import useDebounce from './useDebounce';
 
 type Meta = {
     total_count: number;
@@ -36,7 +37,19 @@ type RegionResponse = {
 
 function useSearchLocation(keyword: string, location: LatLng) {
     const [regionInfo, setRegionInfo] = useState<RegionInfo[]>([]);
-    const [pageParam] = useState(1);
+    const [hasNextPage, setHasNextPage] = useState(false);
+    // const [pageParam] = useState(1);
+    const [pageParam, setPageParam] = useState(1);
+
+    const debouncedSearchText = useDebounce(keyword, 300);
+
+    const fetchNextPage = () => {
+        setPageParam(prev => prev + 1);
+    };
+
+    const fetchPrevPage = () => {
+        setPageParam(prev => prev - 1);
+    };
 
     useEffect(() => {
         (async () => {
@@ -49,16 +62,27 @@ function useSearchLocation(keyword: string, location: LatLng) {
                         },
                     },
                 );
-                
+
+                setHasNextPage(!data.meta.is_end);
                 setRegionInfo(data.documents);
             } catch (error) {
                 console.log(error);
                 setRegionInfo([]);
             }
         })();
-    }, [keyword, location]);
 
-    return { regionInfo };
+        debouncedSearchText === '' && setPageParam(1);
+        // }, [keyword, location]);
+    }, [debouncedSearchText, location, pageParam]);
+
+
+    return {
+        regionInfo,
+        pageParam,
+        fetchNextPage,
+        fetchPrevPage,
+        hasNextPage,
+    };
 }
 
 export default useSearchLocation;
