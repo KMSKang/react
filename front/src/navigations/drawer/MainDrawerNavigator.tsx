@@ -9,11 +9,13 @@ import { colors, mainNavigations } from '@/constants';
 import CustomDrawerContent from './CustomDrawerContent';
 import FeedTabNavigator, { FeedTabParamList } from '../tab/FeedTabNavigator';
 import FeedHomeHeaderLeft from '@/components/feed/FeedHomeHeaderLeft';
+import SettingStackNavigator, { SettingStackParamList } from '../stack/SettingStackNavigator';
 
 export type MainDrawerParamList = {
     [mainNavigations.HOME]: NavigatorScreenParams<MapStackParamList>;
     [mainNavigations.FEED]: NavigatorScreenParams<FeedTabParamList>;
     [mainNavigations.CALENDAR]: undefined;
+    [mainNavigations.SETTING]: NavigatorScreenParams<SettingStackParamList>;
 };
 
 const Drawer = createDrawerNavigator<MainDrawerParamList>();
@@ -32,6 +34,10 @@ function DrawerIcons(route: RouteProp<MainDrawerParamList>, focused: boolean) {
         }
         case mainNavigations.CALENDAR: {
             iconName = 'event-note';
+            break;
+        }
+        case mainNavigations.SETTING: {
+            iconName = 'settings';
             break;
         }
     }
@@ -83,14 +89,21 @@ function MainDrawerNavigator() {
             <Drawer.Screen
                 name={mainNavigations.CALENDAR}
                 component={CalendarHomeScreen}
-                // options={{
-                //     title: '캘린더'
-                // }}
                 options={({ navigation }) => ({
                     title: '캘린더',
                     headerShown: true,
                     headerLeft: () => FeedHomeHeaderLeft(navigation),
                 })}
+            />
+            <Drawer.Screen
+                name={mainNavigations.SETTING}
+                component={SettingStackNavigator}
+                options={{
+                    title: '설정',
+                    drawerItemStyle: {
+                        height: 0,
+                    },
+                }}
             />
         </Drawer.Navigator>
     );
