@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { MutationFunction, useMutation, useQuery } from '@tanstack/react-query';
-import { ResponseProfile, ResponseToken, appleLogin, editProfile, getAccessToken, getProfile, kakaoLogin, logout, postLogin, postSignup } from '@/api/auth';
+import { ResponseProfile, ResponseToken, appleLogin, deleteAccount, editCategory, editProfile, getAccessToken, getProfile, kakaoLogin, logout, postLogin, postSignup } from '@/api/auth';
 import { UseMutationCustomOptions, UseQueryCustomOptions, } from '@/types/common';
 import { removeEncryptStorage, setEncryptStorage, removeHeader, setHeader, } from '@/utils';
 import queryClient from '@/api/queryClient';
 import { numbers, queryKeys, storageKeys } from '@/constants';
+import { Category, Profile } from '@/types';
 
 function useSignup(mutaionOptions?: UseMutationCustomOptions) {
     return useMutation({
@@ -74,11 +75,39 @@ function useGetRefreshToken() {
     return { isSuccess, isError };
 }
 
-function useGetProfile(queryOptions?: UseQueryCustomOptions<ResponseProfile>) {
+type ResponseSelectProfile = { categories: Category } & Profile;
+
+const transformProfileCategory = (
+    data: ResponseProfile,
+): ResponseSelectProfile => {
+    const { BLUE, GREEN, PURPLE, RED, YELLOW, ...rest } = data;
+    const categories = { BLUE, GREEN, PURPLE, RED, YELLOW };
+
+    return { categories, ...rest };
+};
+
+function useGetProfile(
+    //queryOptions?: UseQueryCustomOptions<ResponseProfile>
+    queryOptions?: UseQueryCustomOptions<ResponseProfile, ResponseSelectProfile>
+) {
     return useQuery({
         queryFn: getProfile,
         queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
+        select: transformProfileCategory,
         ...queryOptions,
+    });
+}
+
+function useMutateCategory(mutationOptions?: UseMutationCustomOptions) {
+    return useMutation({
+        mutationFn: editCategory,
+        onSuccess: newProfile => {
+            queryClient.setQueryData(
+                [queryKeys.AUTH, queryKeys.GET_PROFILE],
+                newProfile,
+            );
+        },
+        ...mutationOptions,
     });
 }
 
@@ -95,7 +124,7 @@ function useUpdateProfile(mutationOptions?: UseMutationCustomOptions) {
     });
 }
 
-function useLogout(mutationOptions?: UseMutationCustomOptions) {
+function useLogout(mutationOptions?: UseMutationCustomOptions) {    
     return useMutation({
         mutationFn: logout,
         onSuccess: () => {
@@ -103,6 +132,13 @@ function useLogout(mutationOptions?: UseMutationCustomOptions) {
             removeEncryptStorage(storageKeys.REFRESH_TOKEN);
             queryClient.resetQueries({queryKey: [queryKeys.AUTH]});
         },
+        ...mutationOptions,
+    });
+}
+
+function useMutateDeleteAccount(mutationOptions?: UseMutationCustomOptions) {
+    return useMutation({
+        mutationFn: deleteAccount,
         ...mutationOptions,
     });
 }
@@ -119,6 +155,10 @@ function useAuth() {
     const appleLoginMutation = useAppleLogin();
     const logoutMutation = useLogout();
     const profileMutation = useUpdateProfile();
+    const deleteAccountMutation = useMutateDeleteAccount({
+        onSuccess: () => logoutMutation.mutate(null)
+    });
+    const categoryMutation = useMutateCategory();
 
     return {
         signupMutation,
@@ -129,6 +169,8 @@ function useAuth() {
         kakaoLoginMutation,
         appleLoginMutation,
         profileMutation,
+        deleteAccountMutation,
+        categoryMutation,
     };
 }
 

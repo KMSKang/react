@@ -16,7 +16,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 
 import { FeedStackParamList } from '@/navigations/stack/FeedStackNavigator';
 import useGetPost from '@/hooks/queries/useGetPost';
-import { colorHex, colors, feedNavigations, mainNavigations, mapNavigations } from '@/constants';
+import { colorHex, colors, feedNavigations, mainNavigations, mapNavigations, settingNavigations } from '@/constants';
 import { getDateLocaleFormat } from '@/utils';
 import PreviewImageList from '@/components/common/PreviewImageList';
 import CustomButton from '@/components/common/CustomButton';
@@ -29,6 +29,7 @@ import useModal from '@/hooks/useModal';
 import FeedDetailOption from '@/components/feed/FeedDetailOption';
 import useDetailStore from '@/store/useDetailPostStore';
 import useMutateFavoritePost from '@/hooks/queries/useMutateFavoritePost';
+import useAuth from '@/hooks/queries/useAuth';
 
 type FeedDetailScreenProps = CompositeScreenProps<
     StackScreenProps<FeedStackParamList, typeof feedNavigations.FEED_DETAIL>,
@@ -38,6 +39,8 @@ type FeedDetailScreenProps = CompositeScreenProps<
 function FeedDetailScreen({ route, navigation }: FeedDetailScreenProps) {
     const { id } = route.params;
     const { data: post, isPending, isError } = useGetPost(id);
+    const { getProfileQuery } = useAuth();
+    const { categories } = getProfileQuery.data || {};
     const favoriteMutation = useMutateFavoritePost();
     const insets = useSafeAreaInsets();
     const { setMoveLocation } = useLocationStore();
@@ -62,6 +65,13 @@ function FeedDetailScreen({ route, navigation }: FeedDetailScreenProps) {
 
     const handlePressFavorite = () => {
         favoriteMutation.mutate(post.id);
+    };
+
+    const handlePressCategory = () => {
+        navigation.navigate(mainNavigations.SETTING, {
+            screen: settingNavigations.EDIT_CATEGORY,
+            initial: false,
+        });
     };
 
     return (
@@ -143,6 +153,20 @@ function FeedDetailScreen({ route, navigation }: FeedDetailScreenProps) {
                                         { backgroundColor: colorHex[post.color] },
                                     ]}
                                 />
+                                <View style={styles.infoColumn}>
+                                    <Text style={styles.infoColumnKeyText}>카테고리</Text>
+                                    {categories?.[post.color] ? (
+                                        <Text style={styles.infoColumnValueText}>
+                                            {categories?.[post.color]}
+                                        </Text>
+                                    ) : (
+                                        <Pressable
+                                            style={styles.emptyCategoryContainer}
+                                            onPress={handlePressCategory}>
+                                            <Text style={styles.infoColumnKeyText}>미설정</Text>
+                                        </Pressable>
+                                    )}
+                                </View>
                             </View>
                         </View>
                     </View>
@@ -151,7 +175,6 @@ function FeedDetailScreen({ route, navigation }: FeedDetailScreenProps) {
 
                 {post.images.length > 0 && (
                     <View style={styles.imageContentsContainer}>
-                        {/* <PreviewImageList imageUris={post.images} /> */}
                         <PreviewImageList imageUris={post.images} zoomEnable />
                     </View>
                 )}
@@ -167,13 +190,11 @@ function FeedDetailScreen({ route, navigation }: FeedDetailScreenProps) {
                         style={({ pressed }) => [
                             pressed && styles.bookmarkPressedContainer,
                             styles.bookmarkContainer,
-                            // ]}>
                         ]}
                         onPress={handlePressFavorite}>
                         <Octicons
                             name="star-fill"
                             size={30}
-                            // color={colors.GRAY_100}
                             color={post.isFavorite ? colors.YELLOW_500 : colors.GRAY_100}
                         />
                     </Pressable>
@@ -263,6 +284,13 @@ const styles = StyleSheet.create({
         width: 10,
         height: 10,
         borderRadius: 10,
+    },
+    emptyCategoryContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: colors.GRAY_300,
+        padding: 2,
+        borderRadius: 2,
     },
     addressContainer: {
         gap: 5,

@@ -1,3 +1,5 @@
+import { Category } from "@/types";
+
 function isBlank(value: string) {
     return value.trim() === '';
 }
@@ -63,5 +65,17 @@ function validateEditProfile(values: { nickname: string }) {
     return errors;
 }
 
-//export { validateLogin, validateSignup, validateAddPost };
-export { validateLogin, validateSignup, validateAddPost, validateEditProfile };
+function validateCategory(values: Category) {
+    const errors = {
+        RED: '',
+        GREEN: '',
+        YELLOW: '',
+        BLUE: '',
+        PURPLE: '',
+    };
+
+    return errors;
+}
+
+//export { validateLogin, validateSignup, validateAddPost, validateEditProfile };
+export { validateLogin, validateSignup, validateAddPost, validateEditProfile, validateCategory };
