@@ -1,18 +1,13 @@
 import React from 'react';
-import { Image, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Image, Platform, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import useAuth from '@/hooks/queries/useAuth';
 import { colors, mainNavigations, settingNavigations } from '@/constants';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 function CustomDrawerContent(props: DrawerContentComponentProps) {
-    // const { logoutMutation, getProfileQuery } = useAuth();
     const { getProfileQuery } = useAuth();
     const { email, nickname, imageUri, kakaoImageUri } = getProfileQuery.data || {};
-
-    // const handleLogout = () => {
-    //     logoutMutation.mutate(null);
-    // };
 
     const handlePressSetting = () => {
         props.navigation.navigate(mainNavigations.SETTING, {
@@ -29,28 +24,37 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
                 <View style={styles.userInfoContainer}>
                     <Pressable style={styles.userImageContainer}>
                         {imageUri === null && kakaoImageUri === null && (
-                            <Image source={require('@/assets/user-default.png')} style={styles.userImage} />
+                            <Image
+                                source={require('@/assets/user-default.png')}
+                                style={styles.userImage} />
                         )}
                         {imageUri === null && !!kakaoImageUri && (
-                            <Image source={{ uri: kakaoImageUri }} style={styles.userImage} />
+                            <Image
+                                source={{
+                                    //uri: kakaoImageUri
+                                    uri: `${Platform.OS === 'ios'
+                                        ? 'http://localhost:3030/'
+                                        : 'http://10.0.2.2:3030/'
+                                        }${kakaoImageUri}`,
+                                }}
+                                style={styles.userImage} />
                         )}
                         {imageUri !== null && (
-                            <Image source={{ uri: imageUri }} style={styles.userImage} />
+                            <Image
+                                source={{
+                                    //uri: imageUri
+                                    uri: `${Platform.OS === 'ios'
+                                        ? 'http://localhost:3030/'
+                                        : 'http://10.0.2.2:3030/'
+                                        }${imageUri}`,
+                                }}
+                                style={styles.userImage} />
                         )}
                     </Pressable>
                     <Text style={styles.nameText}>{nickname ?? email}</Text>
                 </View>
                 <DrawerItemList {...props} />
             </DrawerContentScrollView>
-            {/* <Pressable
-                onPress={handleLogout}
-                style={{
-                    alignItems: 'flex-end',
-                    padding: 10,
-                }}>
-                <Text>로그아웃</Text>
-            </Pressable> */}
-
             <View style={styles.bottomContainer}>
                 <Pressable style={styles.bottomMenu} onPress={handlePressSetting}>
                     <MaterialIcons name={'settings'} color={colors.GRAY_700} size={18} />
