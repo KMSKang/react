@@ -9,6 +9,8 @@ import useGetInfiniteSearchPosts from '@/hooks/queries/useGetInfiniteSearchPosts
 import SearchInput from '../common/SearchInput';
 import FeedItem from './FeedItem';
 import { colors } from '@/constants';
+import { ThemeMode } from '@/types';
+import useThemeStore from '@/store/useThemeStore';
 
 function FeedSearchList() {
     const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
@@ -21,6 +23,8 @@ function FeedSearchList() {
         refetch,
     } = useGetInfiniteSearchPosts(keyword);
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const { theme } = useThemeStore();
+    const styles = styling(theme);
 
     const handleRefresh = async () => {
         setIsRefreshing(true);
@@ -52,7 +56,8 @@ function FeedSearchList() {
                     <Pressable
                         style={styles.drawerIconContainer}
                         onPress={() => navigation.openDrawer()}>
-                        <Ionicons name={'menu'} color={colors.BLACK} size={25} />
+                        {/* <Ionicons name={'menu'} color={colors.BLACK} size={25} /> */}
+                        <Ionicons name={'menu'} color={colors[theme].BLACK} size={25} />
                     </Pressable>
                     <View style={styles.inputContainer}>
                         <SearchInput
@@ -73,28 +78,32 @@ function FeedSearchList() {
     );
 }
 
-const styles = StyleSheet.create({
-    contentContainer: {
-        paddingHorizontal: 15,
-    },
-    headerContainer: {
-        flexDirection: 'row',
-        gap: 5,
-        backgroundColor: colors.WHITE,
-        paddingHorizontal: 5,
-        paddingTop: 5,
-        paddingBottom: 10,
-    },
-    drawerIconContainer: {
-        justifyContent: 'center',
-        paddingHorizontal: 8,
-        borderWidth: 1,
-        borderColor: colors.GRAY_200,
-        borderRadius: 5,
-    },
-    inputContainer: {
-        flex: 1,
-    },
-});
+//const styles = StyleSheet.create({
+const styling = (theme: ThemeMode) =>
+    StyleSheet.create({
+        contentContainer: {
+            paddingHorizontal: 15,
+        },
+        headerContainer: {
+            flexDirection: 'row',
+            gap: 5,
+            //backgroundColor: colors.WHITE,
+            backgroundColor: colors[theme].WHITE,
+            paddingHorizontal: 5,
+            paddingTop: 5,
+            paddingBottom: 10,
+        },
+        drawerIconContainer: {
+            justifyContent: 'center',
+            paddingHorizontal: 8,
+            borderWidth: 1,
+            //borderColor: colors.GRAY_200,
+            borderColor: colors[theme].GRAY_200,
+            borderRadius: 5,
+        },
+        inputContainer: {
+            flex: 1,
+        },
+    });
 
 export default FeedSearchList;

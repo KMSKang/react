@@ -14,6 +14,8 @@ import { getDateWithSeparator } from '@/utils';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { FeedStackParamList } from '@/navigations/stack/FeedStackNavigator';
+import { ThemeMode } from '@/types';
+import useThemeStore from '@/store/useThemeStore';
 
 interface FeedItemProps {
     post: ResponsePost;
@@ -23,13 +25,14 @@ type Navigation = StackNavigationProp<FeedStackParamList>;
 
 function FeedItem({ post }: FeedItemProps) {
     const navigation = useNavigation<Navigation>();
+    const { theme } = useThemeStore();
+    const styles = styling(theme);
 
     const handlePressFeed = () => {
         navigation.navigate(feedNavigations.FEED_DETAIL, { id: post.id });
     };
 
     return (
-        // <View style={styles.container}>
         <Pressable style={styles.container} onPress={handlePressFeed}>
             <View>
                 {post.images.length > 0 && (
@@ -62,51 +65,56 @@ function FeedItem({ post }: FeedItemProps) {
                     </Text>
                 </View>
             </View>
-        {/* </View> */}
         </Pressable>
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        margin: 5,
-        marginVertical: 12,
-    },
-    imageContainer: {
-        width: Dimensions.get('screen').width / 2 - 25,
-        height: Dimensions.get('screen').width / 2 - 25,
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-        borderRadius: 5,
-    },
-    emptyImageContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderColor: colors.GRAY_200,
-        borderRadius: 5,
-        borderWidth: 1,
-    },
-    textContainer: {
-        marginTop: 7,
-        gap: 2,
-    },
-    dateText: {
-        color: colors.PINK_700,
-        fontWeight: '600',
-        fontSize: 12,
-    },
-    titleText: {
-        color: colors.BLACK,
-        fontWeight: '500',
-        fontSize: 13,
-    },
-    descriptionText: {
-        color: colors.GRAY_500,
-        fontSize: 13,
-    },
-});
+//const styles = StyleSheet.create({
+const styling = (theme: ThemeMode) =>
+    StyleSheet.create({
+        container: {
+            flex: 1,
+            margin: 5,
+            marginVertical: 12,
+        },
+        imageContainer: {
+            width: Dimensions.get('screen').width / 2 - 25,
+            height: Dimensions.get('screen').width / 2 - 25,
+        },
+        image: {
+            width: '100%',
+            height: '100%',
+            borderRadius: 5,
+        },
+        emptyImageContainer: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            //borderColor: colors.GRAY_200,
+            borderColor: colors[theme].GRAY_200,
+            borderRadius: 5,
+            borderWidth: 1,
+        },
+        textContainer: {
+            marginTop: 7,
+            gap: 2,
+        },
+        dateText: {
+            //color: colors.PINK_700,
+            color: colors[theme].PINK_700,
+            fontWeight: '600',
+            fontSize: 12,
+        },
+        titleText: {
+            //color: colors.BLACK,
+            color: colors[theme].BLACK,
+            fontWeight: '500',
+            fontSize: 13,
+        },
+        descriptionText: {
+            //color: colors.GRAY_500,
+            color: colors[theme].GRAY_500,
+            fontSize: 13,
+        },
+    });
 
 export default FeedItem;

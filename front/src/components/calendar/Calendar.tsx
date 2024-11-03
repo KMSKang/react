@@ -11,6 +11,8 @@ import useModal from '@/hooks/useModal';
 import YearSelector from './YearSelector';
 import { useNavigation } from '@react-navigation/native';
 import CalendarHomeHeaderRight from './CalendarHomeHeaderRight';
+import { ThemeMode } from '@/types';
+import useThemeStore from '@/store/useThemeStore';
 
 interface CalendarProps<T> {
     monthYear: MonthYear;
@@ -32,6 +34,8 @@ function Calendar<T>({
     const { month, year, lastDate, firstDOW } = monthYear;
     const navigation = useNavigation();
     const yearSelector = useModal();
+    const { theme } = useThemeStore();
+    const styles = styling(theme);
 
     const handleChangeYear = (selectYear: number) => {
         onChangeMonth((selectYear - year) * 12);
@@ -50,7 +54,8 @@ function Calendar<T>({
                 <Pressable
                     onPress={() => onChangeMonth(-1)}
                     style={styles.monthButtonContainer}>
-                    <Ionicons name="arrow-back" size={25} color={colors.BLACK} />
+                    {/* <Ionicons name="arrow-back" size={25} color={colors.BLACK} /> */}
+                    <Ionicons name="arrow-back" size={25} color={colors[theme].BLACK} />
                 </Pressable>
                 <Pressable
                     style={styles.monthYearContainer}
@@ -61,13 +66,15 @@ function Calendar<T>({
                     <MaterialIcons
                         name="keyboard-arrow-down"
                         size={20}
-                        color={colors.GRAY_500}
+                        // color={colors.GRAY_500}
+                        color={colors[theme].GRAY_500}
                     />
                 </Pressable>
                 <Pressable
                     onPress={() => onChangeMonth(1)}
                     style={styles.monthButtonContainer}>
-                    <Ionicons name="arrow-forward" size={25} color={colors.BLACK} />
+                    {/* <Ionicons name="arrow-forward" size={25} color={colors.BLACK} /> */}
+                    <Ionicons name="arrow-forward" size={25} color={colors[theme].BLACK} />
                 </Pressable>
             </View>
             <DayOfWeeks />
@@ -100,32 +107,37 @@ function Calendar<T>({
     );
 }
 
-const styles = StyleSheet.create({
-    headerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginHorizontal: 25,
-        marginVertical: 16,
-    },
-    monthYearContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
-    },
-    monthButtonContainer: {
-        padding: 10,
-    },
-    titleText: {
-        fontSize: 18,
-        fontWeight: '500',
-        color: colors.BLACK,
-    },
-    bodyContainer: {
-        borderBottomWidth: StyleSheet.hairlineWidth,
-        borderBottomColor: colors.GRAY_300,
-        backgroundColor: colors.GRAY_100,
-    },
-});
+//const styles = StyleSheet.create({
+const styling = (theme: ThemeMode) =>
+    StyleSheet.create({
+        headerContainer: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginHorizontal: 25,
+            marginVertical: 16,
+        },
+        monthYearContainer: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 10,
+        },
+        monthButtonContainer: {
+            padding: 10,
+        },
+        titleText: {
+            fontSize: 18,
+            fontWeight: '500',
+            //color: colors.BLACK,
+            color: colors[theme].BLACK,
+        },
+        bodyContainer: {
+            borderBottomWidth: StyleSheet.hairlineWidth,
+            //borderBottomColor: colors.GRAY_300,
+            borderBottomColor: colors[theme].GRAY_300,
+            //backgroundColor: colors.GRAY_100,
+            backgroundColor: colors[theme].GRAY_100,
+        },
+    });
 
 export default Calendar;

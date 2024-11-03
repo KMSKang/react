@@ -17,6 +17,8 @@ import Config from 'react-native-config';
 
 import useAuth from '@/hooks/queries/useAuth';
 import { colors } from '@/constants';
+import { ThemeMode } from '@/types';
+import useThemeStore from '@/store/useThemeStore';
 
 const REDIRECT_URI = `${Platform.OS === 'ios'
     ? 'http://localhost:3030/'
@@ -27,6 +29,8 @@ function KakaoLoginScreen() {
     const { kakaoLoginMutation } = useAuth();
     const [isChangeNavigate, setIsChangeNavigate] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
+    const { theme } = useThemeStore();
+    const styles = styling(theme);
 
     const handleOnMessage = (event: WebViewMessageEvent) => {
         if (event.nativeEvent.url.includes(`${REDIRECT_URI}?code=`)) {
@@ -61,7 +65,8 @@ function KakaoLoginScreen() {
         <SafeAreaView style={styles.container}>
             {(isChangeNavigate || isLoading) && (
                 <View style={styles.kakaoLoadingContiner}>
-                    <ActivityIndicator size={'small'} color={colors.BLACK} />
+                    {/* <ActivityIndicator size={'small'} color={colors.BLACK} /> */}
+                    <ActivityIndicator size={'small'} color={colors[theme].BLACK} />
                 </View>
             )}
             <WebView
@@ -77,16 +82,19 @@ function KakaoLoginScreen() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    kakaoLoadingContiner: {
-        backgroundColor: colors.WHITE,
-        height: Dimensions.get('window').height,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
+//const styles = StyleSheet.create({
+const styling = (theme: ThemeMode) =>
+    StyleSheet.create({
+        container: {
+            flex: 1,
+        },
+        kakaoLoadingContiner: {
+            //backgroundColor: colors.WHITE,
+            backgroundColor: colors[theme].WHITE,
+            height: Dimensions.get('window').height,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+    });
 
 export default KakaoLoginScreen;

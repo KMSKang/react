@@ -7,11 +7,15 @@ import { validateSignup } from '@/utils';
 import useAuth from '@/hooks/queries/useAuth';
 import Toast from 'react-native-toast-message';
 import { errorMessages } from '@/constants';
+import { ThemeMode } from '@/types';
+import useThemeStore from '@/store/useThemeStore';
 
 function SignScreen() {
     const { signupMutation, loginMutation } = useAuth();
     const passwordRef = useRef<TextInput | null>(null);
     const passwordConfirmRef = useRef<TextInput | null>(null);
+    const { theme } = useThemeStore();
+    const styles = styling(theme);
 
     const signup = useForm({
         initialValue: { email: '', password: '', passwordConfirm: '' },
@@ -71,15 +75,17 @@ function SignScreen() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        margin: 30,
-    },
-    inputContainer: {
-        gap: 20,
-        marginBottom: 30,
-    },
-});
+//const styles = StyleSheet.create({
+const styling = (theme: ThemeMode) =>
+    StyleSheet.create({
+        container: {
+            flex: 1,
+            margin: 30,
+        },
+        inputContainer: {
+            gap: 20,
+            marginBottom: 30,
+        },
+    });
 
 export default SignScreen;

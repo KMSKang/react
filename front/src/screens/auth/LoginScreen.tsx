@@ -7,10 +7,14 @@ import useAuth from '@/hooks/queries/useAuth';
 import { validateLogin } from '@/utils';
 import Toast from 'react-native-toast-message';
 import { errorMessages } from '@/constants';
+import { ThemeMode } from '@/types';
+import useThemeStore from '@/store/useThemeStore';
 
 function LoginScreen() {
     const { loginMutation } = useAuth();
     const passwordRef = useRef<TextInput | null>(null);
+    const { theme } = useThemeStore();
+    const styles = styling(theme);
 
     const login = useForm({
         initialValue: { email: '', password: '' },
@@ -18,7 +22,6 @@ function LoginScreen() {
     });
 
     const handleSubmit = () => {
-        // loginMutation.mutate(login.values);
         loginMutation.mutate(login.values, {
             onError: error =>
                 Toast.show({
@@ -59,14 +62,16 @@ function LoginScreen() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        margin: 30,
-    },
-    inputContainer: {
-        gap: 20,
-    },
-});
+//const styles = StyleSheet.create({
+const styling = (theme: ThemeMode) =>
+    StyleSheet.create({
+        container: {
+            flex: 1,
+            margin: 30,
+        },
+        inputContainer: {
+            gap: 20,
+        },
+    });
 
 export default LoginScreen;

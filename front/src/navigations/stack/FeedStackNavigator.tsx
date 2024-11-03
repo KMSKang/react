@@ -8,6 +8,9 @@ import FeedHomeHeaderLeft from '@/components/feed/FeedHomeHeaderLeft';
 import EditPostScreen from '@/screens/feed/EditPostScreen';
 import FeedDetailScreen from '@/screens/feed/FeedDetailScreen';
 import ImageZoomScreen from '@/screens/feed/ImageZoomScreen';
+import { ThemeMode } from '@/types';
+import { StyleSheet } from 'react-native';
+import useThemeStore from '@/store/useThemeStore';
 
 export type FeedStackParamList = {
     [feedNavigations.FEED_HOME]: undefined;
@@ -19,20 +22,27 @@ export type FeedStackParamList = {
 const Stack = createStackNavigator<FeedStackParamList>();
 
 function FeedStackNavigator() {
+    const { theme } = useThemeStore();
+    const styles = styling(theme);
+    
     return (
         <Stack.Navigator
             screenOptions={{
                 cardStyle: {
-                    backgroundColor: 'white',
+                    //backgroundColor: 'white',
+                    backgroundColor: colors[theme].WHITE,
                 },
                 headerStyle: {
                     shadowColor: 'gray',
-                    backgroundColor: 'white',
+                    //backgroundColor: 'white',
+                    backgroundColor: colors[theme].WHITE,
                 },
                 headerTitleStyle: {
                     fontSize: 15,
+                    color: colors[theme].BLACK,
                 },
-                headerTintColor: 'black',
+                //headerTintColor: 'black',
+                headerTintColor: colors[theme].BLACK,
             }}>
             <Stack.Screen
                 name={feedNavigations.FEED_HOME}
@@ -49,7 +59,8 @@ function FeedStackNavigator() {
                     headerShown: false,
                     headerTitle: ' ',
                     cardStyle: {
-                        backgroundColor: colors.GRAY_100,
+                        //backgroundColor: colors.GRAY_100,
+                        backgroundColor: colors[theme].GRAY_100,
                     },
                 }}
             />
@@ -71,5 +82,9 @@ function FeedStackNavigator() {
         </Stack.Navigator>
     );
 }
+
+const styling = (theme: ThemeMode) =>
+    StyleSheet.create({
+    });
 
 export default FeedStackNavigator;

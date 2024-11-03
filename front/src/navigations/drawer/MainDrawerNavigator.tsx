@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -10,6 +10,8 @@ import CustomDrawerContent from './CustomDrawerContent';
 import FeedTabNavigator, { FeedTabParamList } from '../tab/FeedTabNavigator';
 import FeedHomeHeaderLeft from '@/components/feed/FeedHomeHeaderLeft';
 import SettingStackNavigator, { SettingStackParamList } from '../stack/SettingStackNavigator';
+import { ThemeMode } from '@/types';
+import useThemeStore from '@/store/useThemeStore';
 
 export type MainDrawerParamList = {
     [mainNavigations.HOME]: NavigatorScreenParams<MapStackParamList>;
@@ -22,6 +24,8 @@ const Drawer = createDrawerNavigator<MainDrawerParamList>();
 
 function DrawerIcons(route: RouteProp<MainDrawerParamList>, focused: boolean) {
     let iconName = '';
+    const { theme } = useThemeStore();
+    const styles = styling(theme);
 
     switch (route.name) {
         case mainNavigations.HOME: {
@@ -45,27 +49,48 @@ function DrawerIcons(route: RouteProp<MainDrawerParamList>, focused: boolean) {
     return (
         <MaterialIcons
             name={iconName}
-            color={focused ? colors.BLACK : colors.GRAY_500}
+            //color={focused ? colors.BLACK : colors.GRAY_500}
+            color={focused ? colors[theme].BLACK : colors[theme].GRAY_500}
             size={18}
         />
     );
 }
 
 function MainDrawerNavigator() {
+    const { theme } = useThemeStore();
+    const styles = styling(theme);
+    
     return (
         <Drawer.Navigator
             drawerContent={CustomDrawerContent}
             screenOptions={({ route }) => ({
                 headerShown: false,
+                cardStyle: {
+                    backgroundColor: colors[theme].WHITE,
+                },
+                headerStyle: {
+                    shadowColor: 'gray',
+                    backgroundColor: colors[theme].WHITE,
+                },
+                headerTitleStyle: {
+                    fontSize: 15,
+                    color: colors[theme].BLACK,
+                },
+                headerTintColor: colors[theme].BLACK,
                 drawerType: 'front',
                 drawerStyle: {
                     width: Dimensions.get('screen').width * 0.6,
-                    backgroundColor: colors.WHITE,
+                    //backgroundColor: colors.WHITE,
+                    backgroundColor: colors[theme].WHITE,
                 },
-                drawerActiveTintColor: colors.BLACK,
-                drawerInactiveTintColor: colors.GRAY_500,
-                drawerActiveBackgroundColor: colors.PINK_200,
-                drawerInactiveBackgroundColor: colors.GRAY_100,
+                //drawerActiveTintColor: colors.BLACK,
+                drawerActiveTintColor: colors[theme].BLACK,
+                //drawerInactiveTintColor: colors.GRAY_500,
+                drawerInactiveTintColor: colors[theme].GRAY_500,
+                //drawerActiveBackgroundColor: colors.PINK_200,
+                drawerActiveBackgroundColor: colors[theme].PINK_200,
+                //drawerInactiveBackgroundColor: colors.GRAY_100,
+                drawerInactiveBackgroundColor: colors[theme].GRAY_100,
                 drawerLabelStyle: {
                     fontWeight: '600',
                 },
@@ -108,5 +133,9 @@ function MainDrawerNavigator() {
         </Drawer.Navigator>
     );
 }
+
+const styling = (theme: ThemeMode) =>
+    StyleSheet.create({
+    });
 
 export default MainDrawerNavigator;
