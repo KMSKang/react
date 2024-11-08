@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Platform, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Platform, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import useAuth from '@/hooks/queries/useAuth';
 import { colors, mainNavigations, settingNavigations } from '@/constants';

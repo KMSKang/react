@@ -87,7 +87,6 @@ const transformProfileCategory = (
 };
 
 function useGetProfile(
-    //queryOptions?: UseQueryCustomOptions<ResponseProfile>
     queryOptions?: UseQueryCustomOptions<ResponseProfile, ResponseSelectProfile>
 ) {
     return useQuery({
@@ -119,6 +118,7 @@ function useUpdateProfile(mutationOptions?: UseMutationCustomOptions) {
                 [queryKeys.AUTH, queryKeys.GET_PROFILE],
                 newProfile,
             );
+            queryClient.invalidateQueries({ queryKey: ['auth', 'getProfile'] });
         },
         ...mutationOptions,
     });
